@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" type="text/css" href="cart.css">
+    <link rel="shortcut icon" type="image/x-icon" href="cart.png">
+    
+</head>
+<body>
+
+    <div class="cart-container">
+        <h1>Your Shopping Cart</h1>
+
+        <?php
+            // Database connection
+            $host = 'localhost';
+            $username = 'root';
+            $password = '';
+            $database = 'cart';
+
+            $conn = new mysqli($host, $username, $password, $database);
+
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            // Deleting a product from the cart
+            if (isset($_POST['delete'])) {
+                $id = $_POST['delete'];
+                $delete_sql = "DELETE FROM products1 WHERE id='$id'";
+                $conn->query($delete_sql);
+            }
+
+            // Fetching products from the database
+            $sql = "SELECT * FROM products1";
+            $result = $conn->query($sql);
+
+            if ($result->num_rows > 0) {
+                while ($row = $result->fetch_assoc()) {
+                    echo "<div class='cart-item' data-id='" . $row['id'] . "'>";
+                    echo "<img src='" . $row['img'] . "' alt='Product Image'>";
+                    echo "<div class='item-details'>";
+                    echo "<h2>" . $row['product_name'] . "</h2>";
+                    echo "<p>" . $row['des'] . "</p>";
+                    echo "<p class='price'><b>Price:</b> 
+                            <span style='margin-right: 10px; text-decoration: line-through; color: gray; font-size: 0.9rem;'>&#8377;" . number_format($row['original_price'], 2) . "</span> 
+                            <span class='offer-price' style='color:#ff5722; font-weight: bold; font-size: 1.1rem;'>&#8377;" . number_format($row['offer_price'], 2) . "</span>
+                          </p>";
+                    echo "</div>";
+
+                    echo "<div class='item-quantity'>";
+                    echo "<button class='minus-btn'>-</button>";
+                    echo "<input type='number' class='quantity-input' value='1' min='1'>";
+                    echo "<button class='add-btn'>+</button>";
+                    echo "<div class='item-price' data-price='" . floatval($row['offer_price']) . "'> &#8377; " . number_format($row['offer_price'], 2) . "</div>";
+                    echo "</div>";
+                  
+                    echo "<form method='post' style='margin: 0;'>";
+                    echo "<input type='hidden' name='delete' value='" . $row['id'] . "'>";
+                    echo "<button type='submit' class='delete-btn'>Delete</button>";
+                    echo "</form>";
+                    echo "</div>";
+                }
+            } else {
+                echo "<p>No products in cart.</p>";
+            }
+
+            $conn->close();
+        ?>
+
+        <div class="total" id="cart-total">Total: &#8377; 0.00</div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function updateTotal() {
+                let total = 0;
+                document.querySelectorAll('.cart-item').forEach(item => {
+                    const quantity = item.querySelector('.quantity-input').value;
+                    const price = parseFloat(item.querySelector('.item-price').dataset.price);
+                    const totalPrice = price * quantity;
+                    item.querySelector('.item-price').textContent = `₹ ${totalPrice.toFixed(2)}`;
+                    total += totalPrice;
+                });
+                document.getElementById('cart-total').textContent = `Total: ₹ ${total.toFixed(2)}`;
+            }
+
+            document.querySelectorAll('.cart-item').forEach(item => {
+                item.querySelector('.minus-btn').addEventListener('click', function () {
+                    let quantityInput = item.querySelector('.quantity-input');
+                    if (quantityInput.value > 1) {
+                        quantityInput.value--;
+                        updateTotal();
+                    }
+                });
+
+                item.querySelector('.add-btn').addEventListener('click', function () {
+                    let quantityInput = item.querySelector('.quantity-input');
+                    quantityInput.value++;
+                    updateTotal();
+                });
+
+                item.querySelector('.quantity-input').addEventListener('input', updateTotal);
+            });
+
+            updateTotal(); // Initial calculation
+        });
+    </script>
+
+</body>
+</html>

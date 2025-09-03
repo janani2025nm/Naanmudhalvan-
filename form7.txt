@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Payment Form</title>
+    <link rel="shortcut icon" type="x-icon" href="skicon.png">
+    <link rel="stylesheet" type="text/css" href="form1.css">
+</head>
+<body>
+    <div class="payment-form">
+        <h2>Complete Your Payment</h2>
+        <form action="puma_tshirt.php" method="post" >
+        <div class="product-details">
+            <img src="pmodel-2.jpg" alt="Product Image">
+            <div class="product-info">
+                <h4>Puma Tshirt</h4>
+                <input type="hidden" name="model" value="model-2">
+                <p>
+                    Size: 
+                    <select name="size" autocomplete="off" required>
+                        <option value="Small">Small</option>
+                        <option value="Medium" selected>Medium</option>
+                        <option value="Large">Large</option>
+                        <option value="Extra Large">Extra Large</option>
+                    </select>
+                </p>
+                <p>
+                    Color: 
+                    <select name="color" autocomplete="off" required>
+                        <option value="Blue" selected>Blue</option>
+                        <option value="Red">Red</option>
+                        <option value="Green">Green</option>
+                        <option value="Black">Black</option>
+                    </select>
+                </p>
+                <p>
+                    Quantity: 
+                    <input type="number" name="quantity" min="1" value="1" id="quantity" autocomplete="off" required>
+                </p>
+                <p class="price">
+                    Price:  ₹<span id="price">359</span> <br>
+                    Total:  ₹<span name="price" id="total-price">359</span>
+                    <input type="hidden" name="price1" value="359">
+                    
+                </p>
+            </div>
+        </div>
+
+        
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input type="text" name="name" placeholder="Your Full Name" autocomplete="off" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" name="email" placeholder="example@example.com" autocomplete="off" required>
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Phone Number</label>
+                <input type="tel" name="number" placeholder="1234567890" autocomplete="off" required>
+            </div>
+
+            <div class="form-group">
+                <b><label>ADDRESS</label></b>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="street">Street and Road Name</label>
+                        <input type="text" name="street" placeholder="Enter street and road name" autocomplete="off" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="door-number">Door Number</label>
+                        <input type="text" name="door" placeholder="e.g., 101" autocomplete="off" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" name="city" placeholder="Enter city name" autocomplete="off" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="pincode">Pincode</label>
+                        <input type="text" name="pincode" placeholder="Enter pincode" autocomplete="off" required>
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Proceed to Pay</button>
+        </form>
+
+        <p class="form-note">Your payment is secure and encrypted.</p>
+    </div>
+
+    <script>
+        const quantityInput = document.getElementById('quantity');
+        const priceElement = document.getElementById('price');
+        const totalPriceElement = document.getElementById('total-price');
+        const unitPrice = 359; // Price per unit
+
+        // Update total price when quantity changes
+        quantityInput.addEventListener('input', function() {
+            const quantity = parseInt(quantityInput.value) || 1;
+            const totalPrice = unitPrice * quantity;
+            totalPriceElement.textContent = totalPrice.toFixed(2);
+        });
+    </script>
+</body>
+</html>
